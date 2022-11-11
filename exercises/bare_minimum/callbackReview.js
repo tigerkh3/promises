@@ -4,7 +4,6 @@
 
 var fs = require('fs');
 var request = require('needle');
-var https = require('https');
 
 // This function should retrieve the first line of the file at `filePath`
 var pluckFirstLineFromFile = function (filePath, callback) {
@@ -21,19 +20,12 @@ var pluckFirstLineFromFile = function (filePath, callback) {
 
 // This function should retrieve the status code of a GET request to `url`
 var getStatusCode = function (url, callback) {
-  // TODO
-  var testAPI = https.get(url, (response) => {
-    callback(response.statusCode);
-    // response.on('data', (chunk) => {
-    //   data += chunk;
-    // });
-    // response.on('end', (err, data) => {
-    //   console.log('what is data', data);
-    //   callback(null, data);
-    // });
-  }).on('error', (err) => {
-    console.log('logging the error:', err);
-    callback(err);
+  request.get(url, (err, res) => {
+    if (err) {
+      callback(err);
+    } else {
+      callback(null, res.statusCode);
+    }
   });
 };
 
